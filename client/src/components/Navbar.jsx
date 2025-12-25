@@ -20,7 +20,7 @@ const Navbar = () => {
       <button
         onClick={() => navigate('/ai')}
         className='flex items-center gap-2 rounded-full text-sm
-        cursor-pointer bg-primary text-white px-10 py-2.5'
+        cursor-pointer bg-blue-300 text-black px-10 py-2.5'
       >
         Get started <ArrowRight className='w-4 h-4' />
       </button>
