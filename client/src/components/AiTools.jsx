@@ -21,7 +21,7 @@ const AiTools = () => {
       <div className="flex flex-wrap mt-10 justify-center">
         {AiToolsData.map((tool, index) => (
           <div
-            keys={index}
+            key={index}
             onClick={() => {
               user && navigate(tool.path);
             }}
