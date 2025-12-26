@@ -39,7 +39,7 @@ export default function Example() {
                         <p>The latest news, articles, and resources, sent to your inbox weekly.</p>
                         <div className="flex items-center">
                             <input className="rounded-l-md bg-gray-100 outline-none w-full max-w-64 h-11 px-3" type="email" placeholder="Enter your email" />
-                            <button className="bg-linear-to-b from-indigo-600 to-indigo-800 cursor-pointer hover:from-indigo-700 hover:to-indigo-900 transition px-4 h-11 text-white rounded-r-md">
+                            <button className="bg-gradient-to-b from-indigo-600 to-indigo-800 cursor-pointer hover:from-indigo-700 hover:to-indigo-900 transition px-4 h-11 text-white rounded-r-md">
                                 Subscribe
                             </button>
                         </div>

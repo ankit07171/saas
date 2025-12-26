@@ -8,3 +8,10 @@
 * {
   font-family: "Outfit", sans-serif;
 }
+
+.reset-tw , .reset-tw *{
+  all:revert !important;
+}
+.c1-drawerRoot{
+  z-index: 10;
+}
