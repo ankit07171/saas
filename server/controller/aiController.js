@@ -1,7 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 import sql from "../config/db.js";
 import { clerkClient } from "@clerk/express";
+import {v2 as cloudidnary} from 'cloudinary';
+import axios from "axios";
+import FormData from "form-data";
 
+// import form
 // Gemini client
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -119,20 +123,32 @@ export const generateImage = async (req, res) => {
     if (plan !== "premium" ) {
       return res.json({
         success: false,
-        message: "This plan is available only for premium subsciptions.",
+        message: "This feaature is available only for premium subsciptions.",
       });
     }
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+    // const response = await ai.models.generateContent({
+    //   model: "gemini-2.5-flash",
+    //   contents: prompt,
+    // });
 
-    const content = response.text;
+    // const content = response.text;
+    const formData = new FormData()
+formData.append('prompt', prompt)
 
-    await sql`
-      INSERT INTO creations (user_id, prompt, content, type)
-      VALUES (${userId}, ${prompt}, ${content}, 'blog-title')
+ const {data} = await  axios.post('https://clipdrop-api.co/text-to-image/v1',formData, {
+  method: 'POST',
+  headers: {'x-api-key': process.env.CLIPDROP_API_KEY,},
+  responseType: "arraybuffer" })
+
+// const base64Image = `data:image/png;base64,${Buffer.from(data,'binary').toString('base64')}`
+const base64Image = `data:image/png;base64,${Buffer.from(data).toString("base64")}`;
+const {secure_url} = await cloudidnary.uploader.upload(base64Image)
+
+    
+await sql`
+      INSERT INTO creations (user_id, prompt, content, type,publish)
+      VALUES (${userId}, ${prompt}, ${secure_url}, 'image',${publish?? false})
     `;
 
     if (plan !== "premium") {
@@ -143,7 +159,7 @@ export const generateImage = async (req, res) => {
       });
     }
 
-    res.json({ success: true, content });
+    res.json({ success: true, content:secure_url });
 
   } catch (error) {
     console.error("Gemini Error:", error);
