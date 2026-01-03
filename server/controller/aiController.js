@@ -5,7 +5,10 @@ import {v2 as cloudinary} from 'cloudinary';
 import axios from "axios";
 import FormData from "form-data";
 import fs from 'fs';
-import pdf from 'pdf-parse/lib/pdf-parse.js';
+// import pdf from 'pdf-parse/lib/pdf-parse.js';
+// import pdfParse from "pdf-parse";
+import { createRequire } from "module";
+
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -170,9 +173,9 @@ export const removeImageBackground = async (req, res) => {
     const authData = await req.auth();
     const userId = authData.userId;
 
-    const { image } = req.file;
+    const image = req.file;
     const plan = req.plan;
-   
+
     if (plan !== "premium" ) {
       return res.json({
         success: false,
@@ -204,7 +207,7 @@ export const removeImageObject = async (req, res) => {
     const userId = authData.userId;
 
     const { object } = req.body;
-    const { image} = req.file;
+    const image = req.file;
     const plan = req.plan;
    
     if (plan !== "premium" ) {
@@ -222,7 +225,7 @@ export const removeImageObject = async (req, res) => {
 
 await sql`
       INSERT INTO creations (user_id, prompt, content, type)
-      VALUES (${userId}, ${`Removed ${object} from image`}, ${secure_url}, 'image')
+      VALUES (${userId}, ${`Removed ${object} from image`}, ${imageUrl}, 'image')
     `;
 
     res.json({ success: true, content:imageUrl });
@@ -253,7 +256,12 @@ export const resumeReview = async (req, res) => {
     }
 
     const dataBuffer = fs.readFileSync(resume.path)
-    const  pdfData = await pdf(dataBuffer)
+
+
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
+
+    const  pdfData = await pdfParse(dataBuffer)
     const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses and areas for improvement. Resume Content :\n\n ${pdfData.text}`
 
     const response = await ai.models.generateContent({

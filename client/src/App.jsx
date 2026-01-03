@@ -13,13 +13,13 @@ import ReviewResume from './pages/ReviewResume'
 import Community from './pages/Community'
 import { useAuth } from '@clerk/clerk-react'
 import { useEffect } from 'react'
+import {Toaster} from 'react-hot-toast';
 
-function App() {
-  const {getToken} =useAuth()
-  useEffect(()=>{
-    getToken().then((token)=>{console.log(token)});
-  },[])
+const App = ()=> {
+
   return (
+    <div>
+      <Toaster/>
     <Routes>
       <Route path='/' element={<Home />} />
 
@@ -34,6 +34,7 @@ function App() {
         <Route path='community' element={<Community />} />
       </Route>
     </Routes>
+    </div>
   )
 }
 

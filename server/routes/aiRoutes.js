@@ -8,8 +8,8 @@ const aiRouter = express.Router();
 aiRouter.post('/generate-article',auth,generateArticles)
 aiRouter.post('/generate-blog-title',auth,generateBlogTitles)
 aiRouter.post('/generate-image',auth,generateImage)
-aiRouter.post('/remove-image-background',upload.single('image'),auth,removeImageBackground)
-aiRouter.post('/remove-image-object',upload.single('image'),auth,removeImageObject)
-aiRouter.post('/resume-review',upload.single('resume'),auth,resumeReview)
+aiRouter.post('/remove-image-background',auth,upload.single('image'),removeImageBackground)
+aiRouter.post('/remove-image-object',auth,upload.single('image'),removeImageObject)
+aiRouter.post('/resume-review',auth,upload.single('resume'),resumeReview)
 
 export default aiRouter
