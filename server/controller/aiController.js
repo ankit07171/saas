@@ -5,13 +5,9 @@ import {v2 as cloudinary} from 'cloudinary';
 import axios from "axios";
 import FormData from "form-data";
 import fs from 'fs';
-// import pdf from 'pdf-parse/lib/pdf-parse.js';
-import pdfParse from "pdf-parse";
-// import { createRequire } from "module";
-// const require = createRequire(import.meta.url);
-// const { PDFParse } = require("pdf-parse");
-// const pdfParse = require("pdf-parse");
-// const pdfParse = pdfModule?.PDFParse ;
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -240,13 +236,9 @@ export const resumeReview = async (req, res) => {
   try {
     const authData = await req.auth();
     const userId = authData.userId;
-
-    const resume = req.file;
+const resume = req.file;
     const plan = req.plan; 
-    // console.log(pdfModule);
     
-    // console.log(typeof pdfParse); // should print: "function"
-
     if (plan !== "premium" ) {
       return res.json({
         success: false,
