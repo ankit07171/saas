@@ -6,9 +6,12 @@ import axios from "axios";
 import FormData from "form-data";
 import fs from 'fs';
 // import pdf from 'pdf-parse/lib/pdf-parse.js';
-// import pdfParse from "pdf-parse";
-import { createRequire } from "module";
-
+import pdfParse from "pdf-parse";
+// import { createRequire } from "module";
+// const require = createRequire(import.meta.url);
+// const { PDFParse } = require("pdf-parse");
+// const pdfParse = require("pdf-parse");
+// const pdfParse = pdfModule?.PDFParse ;
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -61,7 +64,6 @@ export const generateArticles = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
 export const generateBlogTitles = async (req, res) => {
   try {
     const authData = await req.auth();
@@ -109,7 +111,6 @@ export const generateBlogTitles = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
 export const generateImage = async (req, res) => {
   try {
     const authData = await req.auth();
@@ -235,8 +236,6 @@ await sql`
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
-
 export const resumeReview = async (req, res) => {
   try {
     const authData = await req.auth();
@@ -244,7 +243,10 @@ export const resumeReview = async (req, res) => {
 
     const resume = req.file;
     const plan = req.plan; 
+    // console.log(pdfModule);
     
+    // console.log(typeof pdfParse); // should print: "function"
+
     if (plan !== "premium" ) {
       return res.json({
         success: false,
@@ -256,11 +258,6 @@ export const resumeReview = async (req, res) => {
     }
 
     const dataBuffer = fs.readFileSync(resume.path)
-
-
-const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse");
-
     const  pdfData = await pdfParse(dataBuffer)
     const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses and areas for improvement. Resume Content :\n\n ${pdfData.text}`
 
@@ -272,7 +269,7 @@ const pdfParse = require("pdf-parse");
     const content = response.text;
       
 await sql`
-      INSERT INTO creations (user_id, prompt, content, type,publish)
+      INSERT INTO creations (user_id, prompt, content, type)
       VALUES (${userId}, 'Review the uploaded resume', ${content},'resume-review')
     `;
 

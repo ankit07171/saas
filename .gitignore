@@ -10,6 +10,18 @@ lerna-debug.log*
 # Dependencies
 node_modules/
 
+# Environment files
+.env
+.env.local
+.env.production
+
+# Client env
+client/.env
+
+# Server env
+server/.env
+
+
 # Build outputs
 dist/
 dist-ssr/
