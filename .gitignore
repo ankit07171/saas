@@ -21,9 +21,6 @@ client/.env
 # Server env
 server/.env
 
-# Uploads
-server/uploads/
-
 # Build outputs
 dist/
 dist-ssr/
