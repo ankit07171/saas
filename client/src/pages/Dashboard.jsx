@@ -11,20 +11,16 @@ import toast from "react-hot-toast";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const Dashboard = () => {
+  const [creations, setCreations] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { getToken } = useAuth();
 
-  const [creations, setCreations] =useState([])
-   const [loading, setLoading] = useState(false);
-    const { getToken } = useAuth();
-
-  const getDashboardData = async ()=>{
+  const getDashboardData = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(
-        "/api/user/get-user-creations",
-        {
-          headers: { Authorization: `Bearer ${await getToken()}` },
-        }
-      );
+      const { data } = await axios.get("/api/user/get-user-creations", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
 
       if (data.success) {
         setCreations(data.creations);
@@ -37,9 +33,9 @@ const Dashboard = () => {
     setLoading(false);
   };
 
-useEffect(()=>{
-  getDashboardData()
-},[])
+  useEffect(() => {
+    getDashboardData();
+  }, []);
   return (
     <div className="h-full overflow-y-scroll p-6">
       <div className="flex justify-start gap-4 flex-wrap">
@@ -81,15 +77,18 @@ rounded-xl border border-gray-200"
         </div>
       </div>
 
-{loading ?
-<div className="flex justify-center items-center h-3/4">
-  <div className="animate-spin rounded-full h-11 w-11 border-4 border-purple-500 border-t-transparent"></div>
-</div> :
-      <div className="space-y-3 ">
-        <p className="mt-6 mb-4">Recent Creations</p>
-      {creations.map((item) => <CreationItem key={item.id} item={item}/>)}
-      </div>
-    }
+      {loading ? (
+        <div className="flex justify-center items-center h-3/4">
+          <div className="animate-spin rounded-full h-11 w-11 border-4 border-purple-500 border-t-transparent"></div>
+        </div>
+      ) : (
+        <div className="space-y-3 ">
+          <p className="mt-6 mb-4">Recent Creations</p>
+          {creations.map((item) => (
+            <CreationItem key={item.id} item={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
