@@ -16,7 +16,7 @@ export const auth = async (req, res, next) => {
       req.free_usage = 0;
     }
 
-    req.plan = hasPremiumPlan ? "premium" : "free";
+    req.plan = hasPremiumPlan ? "Premium" : "Free";
     next();
   } catch (error) {
     res.json({ success: false, message: error.message });

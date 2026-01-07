@@ -1,7 +1,6 @@
 import { Protect } from "@clerk/clerk-react";
 import { Gem, Sparkles } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { dummyCreationData } from "../assets/assets";
 import CreationItem from "../components/CreationItem";
 
 import axios from "axios";
@@ -11,9 +10,21 @@ import toast from "react-hot-toast";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const Dashboard = () => {
+  const { has, getToken, isLoaded } = useAuth();
+
+  if (!isLoaded) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        Loading...
+      </div>
+    );
+  }
+
+  const isPremium = has({ plan: "premium" });
+
   const [creations, setCreations] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { getToken } = useAuth();
+
 
   const getDashboardData = async () => {
     try {
@@ -63,10 +74,9 @@ rounded-xl border border-gray-200"
           <div className="text-slate-600">
             <p className="text-sm">Active Plan</p>
             <h2 className="text-xl font-semibold">
-              <Protect plan="premium" fallback="Free">
-                Premium
-              </Protect>
-            </h2>
+  {isPremium ? "Premium" : "Free"}
+</h2>
+
           </div>
           <div
             className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#FF61C5] 
