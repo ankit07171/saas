@@ -10,6 +10,7 @@ import GenerateImages from './pages/GenerateImages'
 import RemoveBackground from './pages/RemoveBackground'
 import RemoveObject from './pages/RemoveObject'
 import ReviewResume from './pages/ReviewResume'
+import AddTextOverlay from './pages/AddTextOverlay'
 import Community from './pages/Community'
 import {Toaster} from 'react-hot-toast';
 
@@ -30,6 +31,7 @@ const App = ()=> {
         <Route path='remove-object' element={<RemoveObject />} />
         <Route path='review-resume' element={<ReviewResume />} />
         <Route path='community' element={<Community />} />
+        <Route path='text-overlay' element={<AddTextOverlay />} />
       </Route>
     </Routes>
     </div>

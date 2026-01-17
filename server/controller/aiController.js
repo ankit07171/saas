@@ -217,6 +217,72 @@ export const removeImageObject = async (req, res) => {
   }
 };
 
+export const addText = async (req, res) => {
+  try {
+    const authData = await req.auth();
+    const userId = authData.userId;
+
+    const image = req.file;
+
+    const {
+      text,
+      fontSize = 30,
+      fontFamily = "Arial",
+      color = "#ffffff",
+      gravity = "center",
+      x = 0,
+      y = 0
+    } = req.body;
+
+    if (!text) {
+      return res.status(400).json({
+        success: false,
+        error: "Text is required"
+      });
+    }
+
+    const { public_id } = await uploadToCloudinary(image.buffer);
+
+    const imageUrl = cloudinary.url(public_id, {
+      transformation: [
+        {
+          overlay: {
+            font_family: fontFamily,
+            font_size: Number(fontSize),
+            text: text
+          },
+          color: color,
+          gravity: gravity,
+          x: Number(x),
+          y: Number(y)
+        }
+      ],
+      resource_type: "image"
+    });
+
+    await sql`
+      INSERT INTO creations (user_id, prompt, content, type)
+      VALUES (
+        ${userId},
+        ${`Added text overlay: ${text}`},
+        ${imageUrl},
+        'image'
+      )
+    `;
+
+    res.json({
+      success: true,
+      content: imageUrl
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
+
 export const resumeReview = async (req, res) => {
   try {
     const authData = await req.auth();
